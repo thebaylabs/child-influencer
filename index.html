@@ -17,7 +17,6 @@
     background: rgba(0,0,0,.6); backdrop-filter: blur(6px); transition: background .2s; }
   #banner.book { background: rgba(34,197,94,.85); }
   #banner.phone { background: rgba(239,68,68,.9); }
-  #banner.toy { background: rgba(245,158,11,.9); }
   #controls { position: fixed; left: 0; right: 0; bottom: calc(16px + env(safe-area-inset-bottom));
     display: flex; gap: 10px; justify-content: center; }
   button { font: inherit; font-size: 16px; font-weight: 600; border: 0; border-radius: 999px;
@@ -68,21 +67,20 @@ ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/di
 const OBJECTS = {
   phone: { classes: ["cell phone", "remote"],  // small models often call a black phone a remote
            label: "Phone detected: keep your phone down", say: "Phone detected. Keep your phone down." },
-  book:  { classes: ["book"], label: "Book detected", say: "Book detected" },
-  toy:   { classes: ["teddy bear", "sports ball", "kite", "frisbee"],  // plush toys mostly read as "teddy bear"
-           label: "Toy detected", say: "Toy detected" },
+  // "book" covers open and closed books; from above, closed hardcovers are often called "laptop".
+  book:  { classes: ["book", "laptop"], label: "Book detected", say: "Book detected" },
 };
 const TARGETS = {};  // COCO class name -> object key
 for (const [key, o] of Object.entries(OBJECTS)) for (const c of o.classes) TARGETS[c] = key;
-const MIN_SCORE = 0.25;     // confidence threshold
-const STABLE_FRAMES = 2;    // must be seen this many frames in a row before announcing
+const MIN_SCORE = 0.20;     // low enough for closed books / black phones; still filters noise
+const STABLE_FRAMES = 1;    // announce on first solid hit (lower perceived latency)
 const HOLD_MS = 1200;       // keep the banner up through a missed frame or two
 const REPEAT_MS = 5000;     // re-announce an object still in view at most this often
 
-// YOLO11s (fp16 ONNX, NMS built in, 480px input) by default; add ?fast for YOLO11n on old phones.
+// YOLO11n by default for low latency; add ?accurate for YOLO11s (slower, a bit sharper).
 const SIZE = 480;
-const MODEL = new URLSearchParams(location.search).has("fast")
-  ? "models/yolo11n_480_fp16.onnx" : "models/yolo11s_480_fp16.onnx";
+const MODEL = new URLSearchParams(location.search).has("accurate")
+  ? "models/yolo11s_480_fp16.onnx" : "models/yolo11n_480_fp16.onnx";
 const COCO = ["person","bicycle","car","motorcycle","airplane","bus","train","truck","boat",
   "traffic light","fire hydrant","stop sign","parking meter","bench","bird","cat","dog","horse",
   "sheep","cow","elephant","bear","zebra","giraffe","backpack","umbrella","handbag","tie",
@@ -209,8 +207,8 @@ function draw(dets) {
   }
 }
 
-const COLORS = { phone: "#ef4444", book: "#22c55e", toy: "#f59e0b" };
-const IDLE_TEXT = "Looking for phones, books and toys";
+const COLORS = { phone: "#ef4444", book: "#22c55e" };
+const IDLE_TEXT = "Looking for phones and books";
 
 function announce(dets) {
   const now = Date.now();
@@ -261,8 +259,8 @@ async function loop() {
 // then the baby again. The view must be empty for 2 s, and the baby cries at least 3 s, before the next one.
 const KIOSK = {
   baby: "pi/videos/baby.mp4", thanks: "pi/videos/thanks.png", thanksMs: 3000,
-  videos: { phone: "pi/videos/phone.mp4", book: "pi/videos/book.mp4", toy: "pi/videos/toy.mp4" },
-  minScore: 0.35, minArea: 0.02, steadyMs: 1000, emptyMs: 2000, cooldownMs: 3000,
+  videos: { phone: "pi/videos/phone.mp4", book: "pi/videos/book.mp4" },
+  minScore: 0.28, minArea: 0.015, steadyMs: 1000, emptyMs: 2000, cooldownMs: 3000,
 };
 const screenEl = document.getElementById("screen");
 const thanksEl = document.getElementById("thanks");

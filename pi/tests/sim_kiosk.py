@@ -1,10 +1,10 @@
 """Drive pi/kiosk.py main() with a fake clock, camera, detector and mpv player."""
 import json, sys, types
 from pathlib import Path
-PI = Path(r"C:\Projects\phone-detect\pi"); sys.path.insert(0, str(PI))
+PI = Path(__file__).resolve().parents[1]; sys.path.insert(0, str(PI))
 import kiosk
 
-DUR = {"phone.mp4": 6, "book.mp4": 6, "toy.mp4": 6}
+DUR = {"phone.mp4": 6, "book.mp4": 6}
 
 def run(sc):
     T = [0.0]

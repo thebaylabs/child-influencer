@@ -1,6 +1,6 @@
 # Annakut "crying baby" kiosk (Jetson Orin or Raspberry Pi, fully offline)
 
-The screen loops a crying baby video. A camera looks down into a small doll-house room. A visitor puts one object in the room (phone, book or toy) and that object's 15 to 20 second video plays, then a thank-you screen, then the crying baby again. No internet, nothing recorded.
+The screen loops a crying baby video. A camera looks down into a small doll-house room. A visitor puts one object in the room (phone or book) and that object's 15 to 20 second video plays, then a thank-you screen, then the crying baby again. No internet, nothing recorded.
 
 **Setting it up for the first time? Follow [SETUP_GUIDE.md](SETUP_GUIDE.md).**
 

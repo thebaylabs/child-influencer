@@ -3,7 +3,7 @@ import fs from "fs";
 const html = fs.readFileSync(new URL("../../index.html", import.meta.url), "utf8");
 const objBlock = html.slice(html.indexOf("const OBJECTS = {"), html.indexOf("const MIN_SCORE"));
 const kBlock = html.slice(html.indexOf("const KIOSK = {"), html.indexOf("async function keepAwake"));
-const DUR = { "phone.mp4": 6, "book.mp4": 6, "toy.mp4": 6 };
+const DUR = { "phone.mp4": 6, "book.mp4": 6 };
 const scenarios = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
 const out = {};
 for (const sc of scenarios) {
@@ -35,6 +35,6 @@ for (const sc of scenarios) {
         return { name: n, score: s, target: OBJ[n], box: { width: Math.sqrt(a) * 1000, height: Math.sqrt(a) * 1000 } }; });
     k.kioskStep(dets);
   }
-  out[sc.id] = { plays: plays.map(([n, t]) => [n === "phone" || n === "book" || n === "toy" ? n : n, t]), shows };
+  out[sc.id] = { plays: plays.map(([n, t]) => [n === "phone" || n === "book" ? n : n, t]), shows };
 }
 console.log(JSON.stringify(out));

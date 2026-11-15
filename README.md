@@ -2,11 +2,11 @@
 
 Open the link on any phone or tablet browser, tap a Start button, allow the camera.
 
-- **Start kiosk (crying baby)**: the crying baby video loops full screen with the camera in the corner. Show a phone, book or toy for 1 second and its video plays, then a thank-you screen, then the baby again. Same rules as the offline kiosk in `pi/`. Videos come from `pi/videos/` (placeholders until the real ones are added).
-- **Detector only**: live boxes and a spoken alert for phones, books and toys.
+- **Start kiosk (crying baby)**: the crying baby video loops full screen with the camera in the corner. Show a phone or book for 1 second and its video plays, then a thank-you screen, then the baby again. Same rules as the offline kiosk in `pi/`. Videos come from `pi/videos/` (placeholders until the real ones are added).
+- **Detector only**: live boxes and a spoken alert for phones and books (including closed books).
 
-Detects phones, books and toys (teddy bears and most plush toys, balls) in real time with YOLO11s (COCO, fp16 ONNX, 480px) on onnxruntime-web, WebGPU with WASM fallback, fully on device.
-Add ?fast to the link for YOLO11n (5 MB, faster, less accurate).
+Detects phones and books in real time with YOLO11n (COCO, fp16 ONNX, 480px) on onnxruntime-web, WebGPU with WASM fallback, fully on device.
+Add ?accurate to the link for YOLO11s (larger, a bit sharper, slower).
 
 Add objects: edit OBJECTS in index.html with any of the 80 COCO class names.
 

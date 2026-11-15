@@ -1,7 +1,7 @@
 """Annakut "crying baby" kiosk.
 
 The screen loops the crying baby video. A camera looks down into a small doll-house room.
-When someone puts one object in the room (phone, book, toy), that object's video plays,
+When someone puts one object in the room (phone or book), that object's video plays,
 then a thank-you screen, then the crying baby again. The next object only counts after
 the room has been empty for a moment, so a left-behind object never replays.
 

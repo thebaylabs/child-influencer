@@ -1,7 +1,7 @@
 # Annakut "crying baby" kiosk settings. Edit this file, then restart the kiosk.
 
-model: yolo11n_416        # folder in models/ (yolo11n_320 is faster, less accurate)
-size: 416                 # must match the model folder
+model: yolo11n_320        # folder in models/ (yolo11n_416 is sharper, a bit slower)
+size: 320                 # must match the model folder
 threads: 4
 camera: auto              # auto | picamera | csi (Jetson ribbon camera) | usb
 camera_index: 0           # USB webcam number
@@ -10,26 +10,22 @@ idle_video: videos/baby.mp4   # loops while waiting: the crying baby
 thanks: videos/thanks.png     # shown after each object video (.png for thanks_seconds, or a .mp4)
 thanks_seconds: 3
 
-min_score: 0.35           # model confidence needed to count a sighting
+min_score: 0.28           # low enough for closed books / black phones
 steady_seconds: 1.0       # the object must sit in the room this long before its video plays
 empty_seconds: 2.0        # after a video, the room must be empty this long before the next object counts
 cooldown_seconds: 3       # after the baby comes back, ignore the camera this long (the baby always cries a bit)
 
-# One entry per object, in priority order. Keys 1, 2, 3 play them by hand.
+# One entry per object, in priority order. Keys 1, 2 play them by hand.
 # classes: COCO names that count as this object (see detector.py for all 80).
-# min_area: how much of the camera picture the object must cover (0.02 = 2%).
+# min_area: how much of the camera picture the object must cover (0.015 = 1.5%).
 # Objects whose video file is missing are skipped.
 objects:
   phone:
     classes: ["cell phone", "remote"]   # YOLO11n often calls a black phone a remote
     video: videos/phone.mp4
-    min_area: 0.02
+    min_area: 0.015
   book:
-    classes: ["book"]
+    # "book" is open or closed; from above, closed hardcovers are often called "laptop".
+    classes: ["book", "laptop"]
     video: videos/book.mp4
-    min_area: 0.02
-  toy:
-    # "toy" is not one of the 80 classes, so list the toy kinds the model knows.
-    classes: ["teddy bear", "sports ball", "car"]
-    video: videos/toy.mp4
-    min_area: 0.02
+    min_area: 0.015
